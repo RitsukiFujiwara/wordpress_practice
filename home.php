@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name:Home ~トップページ~
+Template Name: Home ~トップページ~
 */
 ?>
 
