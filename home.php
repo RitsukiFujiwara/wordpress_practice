@@ -53,7 +53,7 @@ Template Name: Home ~トップページ~
 			<section id="recruit" class="site-width">
 				<table>
 					<thead>
-						<tr><th class="color1">RECRUIT</th><th><?php echo get_post_meta($post->ID,'reruite_info1',true);?></th></tr>
+						<tr><th class="color1">RECRUIT</th><th><?php echo get_post_meta($post->ID,'recruit_info1',true);?></th></tr>
 					</thead>
 					<tbody>
 						<tr><th>業務内容</th><td><?php echo get_post_meta($post->ID,'recruit_info2',true);?></td></tr>

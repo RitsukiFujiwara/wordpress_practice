@@ -43,6 +43,7 @@ add_action('save_post','save_custom_postdata');
 function add_custom_inputbox(){
     add_meta_box('about_id','ABOUT入力欄','custom_area','page','normal');
     add_meta_box('recruit_id','RECRUIT入力欄','custom_area2','page','normal');
+    add_meta_box('map_id','map入力欄','custom_area3','page','normal');
 }
 
 function custom_area(){
@@ -59,9 +60,15 @@ function custom_area2(){
     }
     echo '</table>';
 }
+function custom_area3(){
+    global $post;
+    echo 'マップ　：<textarea cols="50" rows="5" name="about_msg">'.get_post_meta($post->ID,'recruit_info'.$i,true).'</textarea><br>';
+}
 
 function save_custom_postdata($post_id){
     $about_msg = '';
+    $recruite_data = '';
+    $map = '';
 
     if(isset($_POST['about_msg'])){
         $about_msg = $_POST['about_msg'];
@@ -74,15 +81,25 @@ function save_custom_postdata($post_id){
     }
 
     for($i = 1 ; $i <= 8; $i++){
-        if(isset($_POST['recruite_info'.$i])){
-            $recruite_data = $_POST['recruite_info'.$i];
+        if(isset($_POST['recruit_info'.$i])){
+            $recruite_data = $_POST['recruit_info'.$i];
         }
     
-        if($recruite_data != get_post_meta($post_id,'recruite_info'.$i,true)){
-            update_post_meta($post_id, 'recruite_info'.$i,$recruite_data);
+        if($recruite_data != get_post_meta($post_id,'recruit_info'.$i,true)){
+            update_post_meta($post_id, 'recruit_info'.$i,$recruite_data);
         }elseif($recruite_data== ''){
-            delete_post_meta($post_id,'recruite_info'.$i,get_post_meta($post_id,'recruite_info'.$i,true));
+            delete_post_meta($post_id,'recruit_info'.$i,get_post_meta($post_id,'recruit_info'.$i,true));
         }
+    }
+
+    if(isset($_POST['map'])){
+        $map = $_POST['map'];
+    }
+
+    if($map != get_post_meta($post_id,'map',true)){
+        update_post_meta($post_id, 'map',$map);
+    }elseif($map == ''){
+        delete_post_meta($post_id,'map',get_post_meta($post_id,'map',true));
     }
 }
 ?>
