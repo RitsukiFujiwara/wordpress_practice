@@ -8,4 +8,81 @@ add_theme_support('custom-header',$custom_header_defaults);
 
 register_nav_menu('mainmenu','メインメニュー');
 
+function pagination($pages = '', $range = 2){
+    $showitems = ($range * 2)+1;
+    global $paged;
+    if(empty($paged)) $paged = 1;
+
+    if($pages == ''){
+        global $wp_query;
+        $pages = $wp_query->max_num_pages;
+        if(!$pages){
+            $pages = 1;
+        }
+    }
+    if(1 != $pages){
+        echo "<div class=\"pagenation\">\n";
+        echo "<ul>\n";
+
+        if($paged > 1) echo "<li class=\"prev\"><a href='".get_pagenum_link($paged -1)."'>Prev</a></li>\n";
+        for ($i = 1; $i <= $pages; $i++){
+            if(1 != $pages &&( !($i >= $paged+range+1 || $i <= $paged-$range-1) || $pages <= $showitems ))
+            {
+                echo($paged == $i)? "<li class=\"active\">".$i."<\li>\n":"<li><a href='".get_pagenum_link($i)."'>".$i."</a></li>\n";
+            }
+        }
+    if ($paged < $pages) echo "<li class=\"next\"><a href=\"".get_pagenum_link($paged + 1)."\">Next</a></li>\n";
+    echo "</ul>\n";
+    echo "</div>\n";
+    }
+}
+
+add_action('admin_menu','add_custom_inputbox');
+add_action('save_post','save_custom_postdata');
+
+function add_custom_inputbox(){
+    add_meta_box('about_id','ABOUT入力欄','custom_area','page','normal');
+    add_meta_box('recruit_id','RECRUIT入力欄','custom_area2','page','normal');
+}
+
+function custom_area(){
+    global $post;
+    echo 'コメント　：<textarea cols="50" rows="5" name="about_msg">'.get_post_meta($post->ID,'recruit_info'.$i,true).'</textarea><br>';
+}
+
+function custom_area2(){
+    global $post;
+
+    echo '<table>';
+    for($i = 1; $i<= 8; $i++){
+        echo '<tr><td>info'.$i.':</td><td><input cols="50" rows="5" name="recruit_info'.$i.'" value="'.get_post_meta($post->ID,'recruit_info'.$i,true).'"></td></tr>';
+    }
+    echo '</table>';
+}
+
+function save_custom_postdata($post_id){
+    $about_msg = '';
+
+    if(isset($_POST['about_msg'])){
+        $about_msg = $_POST['about_msg'];
+    }
+
+    if($about_msg != get_post_meta($post_id,'about',true)){
+        update_post_meta($post_id, 'about',$about_msg);
+    }elseif($about_msg == ''){
+        delete_post_meta($post_id,'about',get_post_meta($post_id,'about',true));
+    }
+
+    for($i = 1 ; $i <= 8; $i++){
+        if(isset($_POST['recruite_info'.$i])){
+            $recruite_data = $_POST['recruite_info'.$i];
+        }
+    
+        if($recruite_data != get_post_meta($post_id,'recruite_info'.$i,true)){
+            update_post_meta($post_id, 'recruite_info'.$i,$recruite_data);
+        }elseif($recruite_data== ''){
+            delete_post_meta($post_id,'recruite_info'.$i,get_post_meta($post_id,'recruite_info'.$i,true));
+        }
+    }
+}
 ?>
