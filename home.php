@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: Home ~トップページ~
+Template Name: HOME ~トップページ~
 */
 ?>
 
@@ -11,7 +11,7 @@ Template Name: Home ~トップページ~
 		<div id="main">
 
 			<!-- トップバナー -->
-			<img src="img/top-baner.png" id="top-baner">
+			<img src="<?php echo get_post_meta($post->ID,'img_top',true); ?>" id="top-baner">
 
 			<!-- ABOUT -->
 			<section id="about" class="site-width">

@@ -41,6 +41,7 @@ add_action('admin_menu','add_custom_inputbox');
 add_action('save_post','save_custom_postdata');
 
 function add_custom_inputbox(){
+    add_meta_box('top_img_id','トップ画像URL入力欄','custom_area4','page','normal');
     add_meta_box('about_id','ABOUT入力欄','custom_area','page','normal');
     add_meta_box('recruit_id','RECRUIT入力欄','custom_area2','page','normal');
     add_meta_box('map_id','map入力欄','custom_area3','page','normal');
@@ -48,7 +49,7 @@ function add_custom_inputbox(){
 
 function custom_area(){
     global $post;
-    echo 'コメント　：<textarea cols="50" rows="5" name="about_msg">'.get_post_meta($post->ID,'recruit_info'.$i,true).'</textarea><br>';
+    echo 'コメント　：<textarea cols="50" rows="5" name="about_msg">'.get_post_meta($post->ID,'about',true).'</textarea><br>';
 }
 
 function custom_area2(){
@@ -62,13 +63,30 @@ function custom_area2(){
 }
 function custom_area3(){
     global $post;
-    echo 'マップ　：<textarea cols="50" rows="5" name="about_msg">'.get_post_meta($post->ID,'recruit_info'.$i,true).'</textarea><br>';
+    echo 'マップ　：<textarea cols="50" rows="5" name="map">'.get_post_meta($post->ID,'map'.$i,true).'</textarea><br>';
+}
+
+function custom_area4(){
+    global $post;
+    echo 'トップ画像URL　：<input type="text" name="img_top" value="'.get_post_meta($post->ID,'img-top',true).'">';
 }
 
 function save_custom_postdata($post_id){
     $about_msg = '';
-    $recruite_data = '';
+    $recruit_data = '';
     $map = '';
+    $img_top = '';
+
+
+    if(isset($_POST['img_top'])){
+        $img_top = $_POST['img_top'];
+    }
+
+    if($img_top != get_post_meta($post_id,'img_top',true)){
+        update_post_meta($post_id, 'img_top',$img_top);
+    }elseif($img_top == ''){
+        delete_post_meta($post_id,'img_top',get_post_meta($post_id,'img_top',true));
+    }
 
     if(isset($_POST['about_msg'])){
         $about_msg = $_POST['about_msg'];
@@ -82,12 +100,12 @@ function save_custom_postdata($post_id){
 
     for($i = 1 ; $i <= 8; $i++){
         if(isset($_POST['recruit_info'.$i])){
-            $recruite_data = $_POST['recruit_info'.$i];
+            $recruit_data = $_POST['recruit_info'.$i];
         }
     
-        if($recruite_data != get_post_meta($post_id,'recruit_info'.$i,true)){
-            update_post_meta($post_id, 'recruit_info'.$i,$recruite_data);
-        }elseif($recruite_data== ''){
+        if($recruit_data != get_post_meta($post_id,'recruit_info'.$i,true)){
+            update_post_meta($post_id, 'recruit_info'.$i,$recruit_data);
+        }elseif($recruit_data== ''){
             delete_post_meta($post_id,'recruit_info'.$i,get_post_meta($post_id,'recruit_info'.$i,true));
         }
     }
@@ -102,4 +120,3 @@ function save_custom_postdata($post_id){
         delete_post_meta($post_id,'map',get_post_meta($post_id,'map',true));
     }
 }
-?>
