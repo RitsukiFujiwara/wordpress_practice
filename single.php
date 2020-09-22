@@ -1,5 +1,5 @@
 <?php get_header(); ?>
-<?php get_template_part('contact','menu');?>
+<?php get_template_part('content','menu');?>
 		<div id="main">
 
 			<!-- blog_list -->
